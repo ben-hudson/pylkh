@@ -44,4 +44,4 @@ Solve a problem.
 **kwargs** (optional): Any LKH-3 parameter described [here](https://github.com/ben-hudson/pylkh/blob/master/LKH_guide.pdf). Lowercase works. For example: `runs=10`.
 
 ### Returns
-**routes** (list): List of lists of nodes.
+**routes** (list): List of lists of node indices.
