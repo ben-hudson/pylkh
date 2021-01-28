@@ -1,4 +1,4 @@
-from setuptools import setup
+from setuptools import setup, find_packages
 from os import path
 
 readme_path = path.join(path.abspath(path.dirname(__file__)), 'README.md')
@@ -11,9 +11,9 @@ setup(name='lkh',
     long_description_content_type='text/markdown',
     author='Ben Hudson',
     author_email='benhudson@fastmail.com',
-    version='1.0.1',
+    version='1.0.2',
     license='DBAD',
-    py_modules=['lkh'],
+    packages=find_packages(),
     url='https://github.com/ben-hudson/pylkh',
     download_url='https://github.com/ben-hudson/pylkh',
     keywords=['TSP', 'CVRP', 'VRP', 'LKH', 'LKH-3'],

@@ -5,6 +5,11 @@ If you want to use this wrapper, you should [install](http://akira.ruc.dk/~keld/
 
 LKH-3 expects problems in the [TSPLIB95](https://github.com/ben-hudson/pylkh/blob/master/tsplib95.pdf) format. Using PyLKH you can solve problems represented as Python objects (via [tsplib95](https://tsplib95.readthedocs.io/)) or files.
 
+## Install
+```
+pip install lkh
+```
+
 ## Example
 ```
 import requests
