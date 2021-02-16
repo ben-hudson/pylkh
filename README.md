@@ -5,6 +5,8 @@ If you want to use this wrapper, you should [install](http://akira.ruc.dk/~keld/
 
 LKH-3 expects problems in the [TSPLIB95](https://github.com/ben-hudson/pylkh/blob/master/tsplib95.pdf) format. Using PyLKH you can solve problems represented as Python objects (via [tsplib95](https://tsplib95.readthedocs.io/)) or files.
 
+>> CAUTION: distances are represented by integer values in the TSPLIB format. This can produce unexpected behaviour for some problems, like those with all nodes within the unit square. Scale your node coordinates by a large number to avoid this.
+
 ## Install
 ```
 pip install lkh

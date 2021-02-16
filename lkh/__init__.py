@@ -10,16 +10,20 @@ def solve(solver='LKH', problem=None, **params):
     assert ('problem_file' in params) ^ valid_problem, 'Specify a TSPLIB95 problem object or a path.'
     if problem is not None:
         # hack for bug in tsplib
-        problem.depots = map(lambda x: f'{x}\n', problem.depots)
+        if len(problem.depots) > 0:
+            problem.depots = map(lambda x: f'{x}\n', problem.depots)
 
         prob_file = tempfile.NamedTemporaryFile(mode='w')
         problem.write(prob_file)
         prob_file.flush()
         params['problem_file'] = prob_file.name
 
-    if 'sintef_solution_file' not in params:
-        sol_file = tempfile.NamedTemporaryFile(mode='w')
-        params['sintef_solution_file'] = sol_file.name
+    # re-load problem because of depot bug
+    problem = tsplib.load(params['problem_file'])
+
+    if 'tour_file' not in params:
+        tour_file = tempfile.NamedTemporaryFile(mode='w')
+        params['tour_file'] = tour_file.name
 
     with tempfile.NamedTemporaryFile(mode='w') as par_file:
         par_file.write('SPECIAL\n')
@@ -30,15 +34,25 @@ def solve(solver='LKH', problem=None, **params):
         ret = subprocess.run([solver, par_file.name], check=True)
 
         # iterate over solution
-        sol_iter = iter(open(params['sintef_solution_file'], 'r'))
-        sol_line = next(sol_iter)
-        while not 'Solution' in sol_line:
-            sol_line = next(sol_iter)
+        with open(params['tour_file'], 'r') as tour:
 
-        routes = []
-        for line in sol_iter:
-            route_name, route_stops = line.split(':')
-            route = list(map(int, route_stops.strip().split(' ')))
+            # skip header
+            line = next(tour)
+            while 'TOUR_SECTION' not in line:
+                line = next(tour)
+
+            routes = []
+            route = []
+            line = next(tour)
+            while '-1' not in line:
+                node = int(line)
+                if node > problem.dimension:
+                    routes.append(route)
+                    route = []
+                else:
+                    route.append(node)
+
+                line = next(tour)
             routes.append(route)
 
-        return routes
+            return routes
