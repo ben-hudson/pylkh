@@ -43,7 +43,7 @@ Solve a problem.
 
 **problem** ([tsplib95.model.StandardProblem](https://tsplib95.readthedocs.io/en/stable/pages/modules.html#tsplib95.models.StandardProblem), optional): Problem object. `problem` or `problem_file` is required.
 
-**quiet** (bool, optional): Suppress LKH output.
+**quiet** (bool, optional): Suppress LKH-3 output.
 
 **kwargs** (optional): Any LKH-3 parameter described [here](https://github.com/ben-hudson/pylkh/blob/master/LKH_guide.pdf) (pg. 5-7). Lowercase works. For example: `runs=10`.
 
