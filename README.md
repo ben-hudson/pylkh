@@ -5,7 +5,7 @@ If you want to use this wrapper, you should [install](http://akira.ruc.dk/~keld/
 
 LKH-3 expects problems in the [TSPLIB95](https://github.com/ben-hudson/pylkh/blob/master/tsplib95.pdf) format. Using PyLKH you can solve problems represented as Python objects (via [tsplib95](https://tsplib95.readthedocs.io/)) or files.
 
->> CAUTION: distances are represented by integer values in the TSPLIB format. This can produce unexpected behaviour for some problems, like those with all nodes within the unit square. Scale your node coordinates by a large number to avoid this.
+> CAUTION: distances are represented by integer values in the TSPLIB format. This can produce unexpected behaviour for some problems, like those with all nodes within the unit square. The `precision` parameter controls this. More information [here](https://github.com/ben-hudson/pylkh/blob/master/LKH_guide.pdf) (pg. 6).
 
 ## Install
 ```
@@ -18,11 +18,11 @@ import requests
 import tsplib95
 import lkh
 
-problem_str = requests.get('http://vrp.galgos.inf.puc-rio.br/media/com_vrp/instances/A/A-n32-k5.vrp').text
+problem_str = requests.get('http://vrp.atd-lab.inf.puc-rio.br/media/com_vrp/instances/A/A-n32-k5.vrp').text
 problem = tsplib95.parse(problem_str)
 
 solver_path = '../LKH-3.0.6/LKH'
-lkh.solve(solver_path, problem=problem, runs=10)
+lkh.solve(solver_path, problem=problem, max_trials=10000, runs=10)
 ```
 Output:
 ```
@@ -43,7 +43,9 @@ Solve a problem.
 
 **problem** ([tsplib95.model.StandardProblem](https://tsplib95.readthedocs.io/en/stable/pages/modules.html#tsplib95.models.StandardProblem), optional): Problem object. `problem` or `problem_file` is required.
 
-**kwargs** (optional): Any LKH-3 parameter described [here](https://github.com/ben-hudson/pylkh/blob/master/LKH_guide.pdf). Lowercase works. For example: `runs=10`.
+**quiet** (bool, optional): Suppress LKH output.
+
+**kwargs** (optional): Any LKH-3 parameter described [here](https://github.com/ben-hudson/pylkh/blob/master/LKH_guide.pdf) (pg. 5-7). Lowercase works. For example: `runs=10`.
 
 ### Returns
-**routes** (list): List of lists of node indices.
+**routes** (list): List of lists of nodes.
