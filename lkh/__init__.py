@@ -3,7 +3,7 @@ import tempfile
 import subprocess
 import shutil
 
-def solve(solver='LKH', problem=None, quiet=False, **params):
+def solve(solver='LKH', problem=None, **params):
     assert shutil.which(solver) is not None, f'{solver} not found.'
 
     valid_problem = problem is not None and isinstance(problem, tsplib.models.StandardProblem)
@@ -15,6 +15,7 @@ def solve(solver='LKH', problem=None, quiet=False, **params):
 
         prob_file = tempfile.NamedTemporaryFile(mode='w')
         problem.write(prob_file)
+        prob_file.write('\n')
         prob_file.flush()
         params['problem_file'] = prob_file.name
 
@@ -31,31 +32,10 @@ def solve(solver='LKH', problem=None, quiet=False, **params):
             par_file.write(f'{k.upper()} = {v}\n')
         par_file.flush()
 
-        stdout = subprocess.DEVNULL if quiet else subprocess.STDOUT
-        stderr = subprocess.STDOUT
-        ret = subprocess.run([solver, par_file.name], stdout=stdout, stderr=stderr, check=True)
+        try:
+            subprocess.check_output([solver, par_file.name], stderr=subprocess.STDOUT)
+        except subprocess.CalledProcessError as e:
+            raise Exception(e.output.decode())
 
-        # iterate over solution
-        with open(params['tour_file'], 'r') as tour:
-            # skip header
-            line = next(tour)
-            while 'TOUR_SECTION' not in line:
-                line = next(tour)
-
-            routes = []
-            route = []
-
-            line = next(tour)
-            while '-1' not in line:
-                node = int(line)
-                if node > problem.dimension:
-                    routes.append(route)
-                    route = []
-                elif node not in problem.depots:
-                    route.append(node)
-
-                line = next(tour)
-
-            routes.append(route)
-
-            return routes
+        solution = tsplib.load(params['tour_file'])
+        return solution.tours
