@@ -1,11 +1,18 @@
 # PyLKH
 This is a super simple Python wrapper for the constrained traveling salesman and vehicle routing problem solver called [LKH-3](http://akira.ruc.dk/~keld/research/LKH-3/).
 
-If you want to use this wrapper, you should [install](http://akira.ruc.dk/~keld/research/LKH-3/) LKH-3 first.
+If you want to use this wrapper, you need to install LKH-3 first:
+```
+wget http://akira.ruc.dk/~keld/research/LKH-3/LKH-3.0.6.tgz
+tar xvfz LKH-3.0.6.tgz
+cd LKH-3.0.6
+make
+sudo cp LKH /usr/local/bin
+```
 
 LKH-3 expects problems in the [TSPLIB95](https://github.com/ben-hudson/pylkh/blob/master/tsplib95.pdf) format. Using PyLKH you can solve problems represented as Python objects (via [tsplib95](https://tsplib95.readthedocs.io/)) or files.
 
-> CAUTION: distances are represented by integer values in the TSPLIB format. This can produce unexpected behaviour for some problems, like those with all nodes within the unit square. The `precision` parameter controls this. More information [here](https://github.com/ben-hudson/pylkh/blob/master/LKH_guide.pdf) (pg. 6).
+> CAUTION: distances are represented by integer values in the TSPLIB format. This can produce unexpected behaviour for some problems, like those with all nodes within the unit square. You can scale all coordinates by a large number to avoid this.
 
 ## Install
 ```
