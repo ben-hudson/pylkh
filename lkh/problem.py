@@ -86,6 +86,7 @@ class LKHProblem(tsplib95.models.StandardProblem):
                 rendered[field.keyword] = field.render(value)
 
         # build keyword-value pairs with the separator
+        # add spec part before data part
         kvpairs = []
         for keyword in spec_part:
             if keyword in rendered:

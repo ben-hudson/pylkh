@@ -5,6 +5,8 @@ import tempfile
 
 import tsplib95
 
+from .problem import LKHProblem
+
 
 def solve(solver='LKH', problem=None, **params):
     assert shutil.which(solver) is not None, f'{solver} not found.'
@@ -12,6 +14,10 @@ def solve(solver='LKH', problem=None, **params):
     valid_problem = problem is not None and isinstance(problem, tsplib95.models.StandardProblem)
     assert ('problem_file' in params) ^ valid_problem, 'Specify a problem object *or* a path.'
     if problem is not None:
+        # hack for bug in tsplib
+        if len(problem.depots) > 0 and not isinstance(problem, LKHProblem):
+            problem.depots = map(lambda x: f'{x}\n', problem.depots)
+
         prob_file = tempfile.NamedTemporaryFile(mode='w', delete=False)
         problem.write(prob_file)
         prob_file.write('\n')
