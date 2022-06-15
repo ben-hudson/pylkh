@@ -1,7 +1,7 @@
 # PyLKH
 This is a super simple Python wrapper for the constrained traveling salesman and vehicle routing problem solver called [LKH-3](http://akira.ruc.dk/~keld/research/LKH-3/).
 
-If you want to use this wrapper, you need to install LKH-3 first:
+If you want to use this wrapper, you need to install LKH-3 first. For example, on Ubuntu:
 ```
 wget http://akira.ruc.dk/~keld/research/LKH-3/LKH-3.0.6.tgz
 tar xvfz LKH-3.0.6.tgz
@@ -41,7 +41,7 @@ Output:
 ```
 
 ## API
-```lkh.solve(solver='LKH', problem=None, **kwargs)```
+```lkh.solve(solver='LKH', problem=None, problem_file=None, **kwargs)```
 
 Solve a problem.
 
@@ -49,6 +49,8 @@ Solve a problem.
 **solver** (str, optional): Path to LKH-3 executable.
 
 **problem** ([tsplib95.models.StandardProblem](https://tsplib95.readthedocs.io/en/stable/pages/modules.html#tsplib95.models.StandardProblem), optional): Problem object. `problem` or `problem_file` is required.
+
+**problem_file** (str, optional): Path to TSPLIB-formatted problem. `problem` or `problem_file` is required.
 
 **kwargs** (optional): Any LKH-3 parameter described [here](https://github.com/ben-hudson/pylkh/blob/master/LKH_guide.pdf) (pg. 5-7). Lowercase works. For example: `runs=10`.
 
