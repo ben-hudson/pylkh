@@ -44,7 +44,7 @@ class LKHProblem(tsplib95.models.StandardProblem):
     # need to override `render` because spec fields must precede data fields according to TSPLIB format
     # adapted from https://github.com/rhgrant10/tsplib95/blob/master/tsplib95/models.py#L217
     def render(self):
-        spec_fields = [
+        spec_part = [
             'NAME',
             'TYPE',
             'COMMENT',
@@ -62,7 +62,7 @@ class LKHProblem(tsplib95.models.StandardProblem):
             'SCALE'
         ]
 
-        data_fields = [
+        data_part = [
             'NODE_COORD_SECTION',
             'DEPOT_SECTION',
             'DEMAND_SECTION',
@@ -85,15 +85,16 @@ class LKHProblem(tsplib95.models.StandardProblem):
             if name in self.__dict__ or value != field.get_default_value():
                 rendered[field.keyword] = field.render(value)
 
-        # re-order fields
-        # https://stackoverflow.com/questions/50493838/fastest-way-to-sort-a-python-3-7-dictionary
-        rendered_sorted = {k: rendered[k] for k in spec_fields + data_fields if k in rendered}
-
         # build keyword-value pairs with the separator
         kvpairs = []
-        for keyword, value in rendered_sorted.items():
-            sep = ':\n' if '\n' in value else ': '
-            kvpairs.append(f'{keyword}{sep}{value}')
+        for keyword in spec_part:
+            if keyword in rendered:
+                sep = ':\n' if '\n' in value else ': '
+                kvpairs.append(f'{keyword}{sep}{value}')
+        for keyword in data_part:
+            if keyword in rendered:
+                sep = ':\n' if '\n' in value else ': '
+                kvpairs.append(f'{keyword}{sep}{value}')
         kvpairs.append('EOF')
 
         # join and return the result
