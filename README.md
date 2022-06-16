@@ -47,20 +47,20 @@ Output:
 Solve a problem.
 
 ### Parameters
-* **solver** (optional): Path to LKH-3 executable. Defaults to `LKH`.
+**solver** (optional): Path to LKH-3 executable. Defaults to `LKH`.
 
-* **problem** (optional): Problem object. lkh.LKHProblem or [tsplib95.models.StandardProblem](https://tsplib95.readthedocs.io/en/stable/pages/modules.html#tsplib95.models.StandardProblem) work but only lkh.LKHProblem supports all LKH-3 fields. `problem` or `problem_file` is required.
+**problem** (optional): Problem object. `lkh.LKHProblem` is preferred but [`tsplib95.models.StandardProblem`](https://tsplib95.readthedocs.io/en/stable/pages/modules.html#tsplib95.models.StandardProblem) also works. `problem` or `problem_file` is required.
 
-* **problem_file** (optional) - Path to TSPLIB-formatted problem. `problem` or `problem_file` is required.
+**problem_file** (optional): Path to TSPLIB-formatted problem. `problem` or `problem_file` is required.
 
-* **kwargs** (optional) - Any LKH-3 parameter described [here](https://github.com/ben-hudson/pylkh/blob/master/LKH_guide.pdf) (pg. 5-7). Lowercase works. For example: `runs=10`.
+**kwargs** (optional): Any LKH-3 parameter described [here](https://github.com/ben-hudson/pylkh/blob/master/LKH_guide.pdf) (pg. 5-7). Lowercase works. For example: `runs=10`.
 
 ### Returns
-* **routes** (list) - List of lists of nodes.
+**routes** (list): List of lists of nodes.
 
 ### ```class lkh.LKHProblem```
 
-A problem. Inherits from [tsplib95.models.StandardProblem](https://tsplib95.readthedocs.io/en/stable/pages/modules.html#tsplib95.models.StandardProblem).
+Problem supporting fields described [here]() (pg. 4-6). Inherits from [`tsplib95.models.StandardProblem`](https://tsplib95.readthedocs.io/en/stable/pages/modules.html#tsplib95.models.StandardProblem).
 
 The available specification fields are:
 * `NAME`

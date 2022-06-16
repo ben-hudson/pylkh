@@ -14,7 +14,7 @@ def solve(solver='LKH', problem=None, **params):
     valid_problem = problem is not None and isinstance(problem, tsplib.models.StandardProblem)
     assert ('problem_file' in params) ^ valid_problem, 'Specify a problem object *or* a path.'
     if problem is not None:
-        # hack for bug in tsplib
+        # fix for https://github.com/rhgrant10/tsplib95/pull/16
         if len(problem.depots) > 0 and not isinstance(problem, LKHProblem):
             problem.depots = map(lambda x: f'{x}\n', problem.depots)
 

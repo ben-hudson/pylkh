@@ -90,8 +90,8 @@ class LKHProblem(tsplib.models.StandardProblem):
         kvpairs = []
         for keyword in spec_part + data_part:
             if keyword in rendered:
-                sep = ':\n' if '\n' in value else ': '
                 value = rendered[keyword]
+                sep = ':\n' if '\n' in value else ': '
                 kvpairs.append(f'{keyword}{sep}{value}')
         kvpairs.append('EOF')
 
