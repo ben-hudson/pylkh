@@ -1,17 +1,21 @@
-import tsplib95 as tsplib
-import tempfile
-import subprocess
-import shutil
 import os
+import shutil
+import subprocess
+import tempfile
+
+import tsplib95 as tsplib
+
+from .problems import LKHProblem
+
 
 def solve(solver='LKH', problem=None, **params):
     assert shutil.which(solver) is not None, f'{solver} not found.'
 
     valid_problem = problem is not None and isinstance(problem, tsplib.models.StandardProblem)
-    assert ('problem_file' in params) ^ valid_problem, 'Specify a TSPLIB95 problem object *or* a path.'
+    assert ('problem_file' in params) ^ valid_problem, 'Specify a problem object *or* a path.'
     if problem is not None:
-        # hack for bug in tsplib
-        if len(problem.depots) > 0:
+        # fix for https://github.com/rhgrant10/tsplib95/pull/16
+        if len(problem.depots) > 0 and not isinstance(problem, LKHProblem):
             problem.depots = map(lambda x: f'{x}\n', problem.depots)
 
         prob_file = tempfile.NamedTemporaryFile(mode='w', delete=False)
@@ -19,9 +23,6 @@ def solve(solver='LKH', problem=None, **params):
         prob_file.write('\n')
         prob_file.close()
         params['problem_file'] = prob_file.name
-
-    # need dimension of problem to parse solution
-    problem = tsplib.load(params['problem_file'])
 
     if 'tour_file' not in params:
         tour_file = tempfile.NamedTemporaryFile(mode='w', delete=False)
@@ -43,7 +44,9 @@ def solve(solver='LKH', problem=None, **params):
     solution = tsplib.load(params['tour_file'])
 
     os.remove(par_file.name)
-    if 'prob_file' in locals(): os.remove(prob_file.name)
-    if 'tour_file' in locals(): os.remove(tour_file.name)
-    
+    if 'prob_file' in locals():
+        os.remove(prob_file.name)
+    if 'tour_file' in locals():
+        os.remove(tour_file.name)
+
     return solution.tours
