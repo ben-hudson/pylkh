@@ -50,7 +50,7 @@ Solve a problem.
 #### Parameters
 **solver** (optional): Path to LKH-3 executable. Defaults to `LKH`.
 
-**problem** (optional): Problem object. [lkh.LKHProblem](https://github.com/ben-hudson/pylkh#class-lkhlkhproblem) is preferred but [tsplib95.models.StandardProblem](https://tsplib95.readthedocs.io/en/stable/pages/modules.html#tsplib95.models.StandardProblem) also works. `problem` or `problem_file` is required.
+**problem** (optional): Problem object. [LKHProblem](https://github.com/ben-hudson/pylkh/blob/master/lkh/problems.py#L28) is preferred but [tsplib95.models.StandardProblem](https://tsplib95.readthedocs.io/en/stable/pages/modules.html#tsplib95.models.StandardProblem) also works. `problem` or `problem_file` is required.
 
 **problem_file** (optional): Path to TSPLIB-formatted problem. `problem` or `problem_file` is required.
 
