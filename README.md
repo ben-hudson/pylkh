@@ -15,7 +15,7 @@ It extends the format [to support VRPs](https://github.com/ben-hudson/pylkh/blob
 
 Using PyLKH you can solve problems represented as Python objects or files.
 
-> CAUTION: distances are represented by integer values in the TSPLIB format. This can produce unexpected behaviour for some problems, like those with all nodes within the unit square. You can scale all coordinates by a large number (using the `SCALE` field) to avoid this.
+> CAUTION: distances are represented by integer values in the TSPLIB format. This can produce unexpected behaviour for some problems, like those with all nodes within the unit square. You can scale all coordinates by a large number to avoid this.
 
 ## Install
 ```
