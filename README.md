@@ -10,11 +10,12 @@ make
 sudo cp LKH /usr/local/bin
 ```
 
-LKH-3 expects problems in the [TSPLIB](https://github.com/ben-hudson/pylkh/blob/master/tsplib95.pdf) format.
-It extends the format to support VRPs.
+LKH-3 expects problems in the [TSPLIB](https://github.com/ben-hudson/pylkh/blob/master/docs/tsplib.pdf) format.
+It extends the format [to support VRPs](https://github.com/ben-hudson/pylkh/blob/master/docs/lkh-3.pdf).
+
 Using PyLKH you can solve problems represented as Python objects or files.
 
-> CAUTION: distances are represented by integer values in the TSPLIB format. This can produce unexpected behaviour for some problems, like those with all nodes within the unit square. You can scale all coordinates by a large number to avoid this.
+> CAUTION: distances are represented by integer values in the TSPLIB format. This can produce unexpected behaviour for some problems, like those with all nodes within the unit square. You can scale all coordinates by a large number (using the `SCALE` field) to avoid this.
 
 ## Install
 ```
@@ -46,21 +47,21 @@ Output:
 
 Solve a problem.
 
-### Parameters
+#### Parameters
 **solver** (optional): Path to LKH-3 executable. Defaults to `LKH`.
 
-**problem** (optional): Problem object. `lkh.LKHProblem` is preferred but [`tsplib95.models.StandardProblem`](https://tsplib95.readthedocs.io/en/stable/pages/modules.html#tsplib95.models.StandardProblem) also works. `problem` or `problem_file` is required.
+**problem** (optional): Problem object. [lkh.LKHProblem](https://github.com/ben-hudson/pylkh#class-lkhlkhproblem) is preferred but [tsplib95.models.StandardProblem](https://tsplib95.readthedocs.io/en/stable/pages/modules.html#tsplib95.models.StandardProblem) also works. `problem` or `problem_file` is required.
 
 **problem_file** (optional): Path to TSPLIB-formatted problem. `problem` or `problem_file` is required.
 
-**kwargs** (optional): Any LKH-3 parameter described [here](https://github.com/ben-hudson/pylkh/blob/master/LKH_guide.pdf) (pg. 5-7). Lowercase works. For example: `runs=10`.
+**kwargs** (optional): Any LKH-3 parameter described [here](https://github.com/ben-hudson/pylkh/blob/master/docs/lkh.pdf) (pg. 5-7) or [here](https://github.com/ben-hudson/pylkh/blob/master/docs/lkh-3.pdf) (pg. 6-8). Lowercase works. For example: `runs=10`.
 
-### Returns
+#### Returns
 **routes** (list): List of lists of nodes.
 
 ### ```class lkh.LKHProblem```
 
-Problem supporting fields described [here]() (pg. 4-6). Inherits from [`tsplib95.models.StandardProblem`](https://tsplib95.readthedocs.io/en/stable/pages/modules.html#tsplib95.models.StandardProblem).
+Problem supporting fields described [here](https://github.com/ben-hudson/pylkh/blob/master/docs/lkh-3.pdf) (pg. 4-6). Inherits from [tsplib95.models.StandardProblem](https://tsplib95.readthedocs.io/en/stable/pages/modules.html#tsplib95.models.StandardProblem).
 
 The available specification fields are:
 * `NAME`
