@@ -3,15 +3,15 @@ import shutil
 import subprocess
 import tempfile
 
-import tsplib95
+import tsplib95 as tsplib
 
-from .problem import LKHProblem
+from .problems import LKHProblem
 
 
 def solve(solver='LKH', problem=None, **params):
     assert shutil.which(solver) is not None, f'{solver} not found.'
 
-    valid_problem = problem is not None and isinstance(problem, tsplib95.models.StandardProblem)
+    valid_problem = problem is not None and isinstance(problem, tsplib.models.StandardProblem)
     assert ('problem_file' in params) ^ valid_problem, 'Specify a problem object *or* a path.'
     if problem is not None:
         # hack for bug in tsplib
@@ -41,7 +41,7 @@ def solve(solver='LKH', problem=None, **params):
     except subprocess.CalledProcessError as e:
         raise Exception(e.output.decode())
 
-    solution = tsplib95.load(params['tour_file'])
+    solution = tsplib.load(params['tour_file'])
 
     os.remove(par_file.name)
     if 'prob_file' in locals():

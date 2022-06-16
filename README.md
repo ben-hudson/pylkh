@@ -10,7 +10,9 @@ make
 sudo cp LKH /usr/local/bin
 ```
 
-LKH-3 expects problems in the [TSPLIB95](https://github.com/ben-hudson/pylkh/blob/master/tsplib95.pdf) format. Using PyLKH you can solve problems represented as Python objects (via [tsplib95](https://tsplib95.readthedocs.io/)) or files.
+LKH-3 expects problems in the [TSPLIB](https://github.com/ben-hudson/pylkh/blob/master/tsplib95.pdf) format.
+It extends the format to support VRPs.
+Using PyLKH you can solve problems represented as Python objects or files.
 
 > CAUTION: distances are represented by integer values in the TSPLIB format. This can produce unexpected behaviour for some problems, like those with all nodes within the unit square. You can scale all coordinates by a large number to avoid this.
 
@@ -22,11 +24,10 @@ pip install lkh
 ## Example
 ```
 import requests
-import tsplib95
 import lkh
 
 problem_str = requests.get('http://vrp.atd-lab.inf.puc-rio.br/media/com_vrp/instances/A/A-n32-k5.vrp').text
-problem = tsplib95.parse(problem_str)
+problem = lkh.LKHProblem.parse(problem_str)
 
 solver_path = '../LKH-3.0.6/LKH'
 lkh.solve(solver_path, problem=problem, max_trials=10000, runs=10)
@@ -41,18 +42,53 @@ Output:
 ```
 
 ## API
-```lkh.solve(solver='LKH', problem=None, problem_file=None, **kwargs)```
+### ```lkh.solve(solver='LKH', problem=None, problem_file=None, **kwargs)```
 
 Solve a problem.
 
 ### Parameters
-**solver** (str, optional): Path to LKH-3 executable.
+* **solver** (optional): Path to LKH-3 executable. Defaults to `LKH`.
 
-**problem** ([tsplib95.models.StandardProblem](https://tsplib95.readthedocs.io/en/stable/pages/modules.html#tsplib95.models.StandardProblem), optional): Problem object. `problem` or `problem_file` is required.
+* **problem** (optional): Problem object. lkh.LKHProblem or [tsplib95.models.StandardProblem](https://tsplib95.readthedocs.io/en/stable/pages/modules.html#tsplib95.models.StandardProblem) work but only lkh.LKHProblem supports all LKH-3 fields. `problem` or `problem_file` is required.
 
-**problem_file** (str, optional): Path to TSPLIB-formatted problem. `problem` or `problem_file` is required.
+* **problem_file** (optional) - Path to TSPLIB-formatted problem. `problem` or `problem_file` is required.
 
-**kwargs** (optional): Any LKH-3 parameter described [here](https://github.com/ben-hudson/pylkh/blob/master/LKH_guide.pdf) (pg. 5-7). Lowercase works. For example: `runs=10`.
+* **kwargs** (optional) - Any LKH-3 parameter described [here](https://github.com/ben-hudson/pylkh/blob/master/LKH_guide.pdf) (pg. 5-7). Lowercase works. For example: `runs=10`.
 
 ### Returns
-**routes** (list): List of lists of nodes.
+* **routes** (list) - List of lists of nodes.
+
+### ```class lkh.LKHProblem```
+
+A problem. Inherits from [tsplib95.models.StandardProblem](https://tsplib95.readthedocs.io/en/stable/pages/modules.html#tsplib95.models.StandardProblem).
+
+The available specification fields are:
+* `NAME`
+* `TYPE`
+* `COMMENT`
+* `DIMENSION`
+* `CAPACITY`
+* `EDGE_WEIGHT_TYPE`
+* `EDGE_WEIGHT_FORMAT`
+* `EDGE_DATA_FORMAT`
+* `NODE_COORD_TYPE`
+* `DISPLAY_DATA_TYPE`
+* `SALESMEN`
+* `VEHICLES`
+* `DISTANCE`
+* `RISK_THRESHOLD`
+* `SCALE`
+
+The available data fields are:
+* `NODE_COORD_SECTION`
+* `DEPOT_SECTION`
+* `DEMAND_SECTION`
+* `EDGE_DATA_SECTION`
+* `FIXED_EDGES_SECTION`
+* `DISPLAY_DATA_SECTION`
+* `TOUR_SECTION`
+* `EDGE_WEIGHT_SECTION`
+* `BACKHAUL_SECTION`
+* `PICKUP_AND_DELIVERY_SECTION`
+* `SERVICE_TIME_SECTION`
+* `TIME_WINDOW_SECTION`
