@@ -33,13 +33,13 @@ problem = lkh.LKHProblem.parse(problem_str)
 solver_path = '../LKH-3.0.6/LKH'
 lkh.solve(solver_path, problem=problem, max_trials=10000, runs=10)
 ```
-Output:
+Output (note that values correspond to nodes, *not* node indicies):
 ```
-[[26, 7, 13, 17, 19, 31, 21],
- [24, 27],
- [14, 28, 11, 4, 23, 3, 2, 6],
- [29, 18, 8, 9, 22, 15, 10, 25, 5, 20],
- [12, 1, 16, 30]]
+[[27, 8, 14, 18, 20, 32, 22],
+ [25, 28],
+ [15, 29, 12, 5, 24, 4, 3, 7],
+ [30, 19, 9, 10, 23, 16, 11, 26, 6, 21],
+ [13, 2, 17, 31]]
 ```
 
 ## API
