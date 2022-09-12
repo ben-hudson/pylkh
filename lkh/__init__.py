@@ -2,27 +2,30 @@ import os
 import shutil
 import subprocess
 import tempfile
-
-import tsplib95 as tsplib
+import warnings
 
 from .problems import LKHProblem
 
 
 def solve(solver='LKH', problem=None, **params):
     assert shutil.which(solver) is not None, f'{solver} not found.'
+    assert ('problem_file' in params) ^ (problem is not None), 'Specify a problem object *or* a path.'
 
-    valid_problem = problem is not None and isinstance(problem, tsplib.models.StandardProblem)
-    assert ('problem_file' in params) ^ valid_problem, 'Specify a problem object *or* a path.'
-    if problem is not None:
-        # fix for https://github.com/rhgrant10/tsplib95/pull/16
-        if len(problem.depots) > 0 and not isinstance(problem, LKHProblem):
-            problem.depots = map(lambda x: f'{x}\n', problem.depots)
+    if 'problem_file' in params:
+        # annoying, but necessary to get the original problem dimension
+        problem = LKHProblem.load(params['problem_file'])
 
-        prob_file = tempfile.NamedTemporaryFile(mode='w', delete=False)
-        problem.write(prob_file)
-        prob_file.write('\n')
-        prob_file.close()
-        params['problem_file'] = prob_file.name
+    if not isinstance(problem, LKHProblem):
+        warnings.warn('Subclassing LKHProblem is recommended. Proceed at your own risk!')
+
+    if len(problem.depots) > 1:
+        warnings.warn('LKH-3 cannot solve multi-depot problems.')
+
+    prob_file = tempfile.NamedTemporaryFile(mode='w', delete=False)
+    problem.write(prob_file)
+    prob_file.write('\n')
+    prob_file.close()
+    params['problem_file'] = prob_file.name
 
     if 'tour_file' not in params:
         tour_file = tempfile.NamedTemporaryFile(mode='w', delete=False)
@@ -41,7 +44,22 @@ def solve(solver='LKH', problem=None, **params):
     except subprocess.CalledProcessError as e:
         raise Exception(e.output.decode())
 
-    solution = tsplib.load(params['tour_file'])
+    # the tour file produced by LKH-3 includes dummy nodes to indicate depots
+    # for example, if a problem has DIMENSION=32 (1 depot node + 31 task nodes),
+    # the tour file will have a SINGLE tour with DIMENSION=36 (5 depot nodes + 31 task nodes)
+    solution = LKHProblem.load(params['tour_file'])
+    tour = solution.tours[0]
+    # convert this tour to multiple routes
+    routes = []
+    route = []
+    for node in tour:
+        if node in problem.depots or node > problem.dimension:
+            if len(route) > 0:
+                routes.append(route)
+            route = []
+        else:
+            route.append(node)
+    routes.append(route)
 
     os.remove(par_file.name)
     if 'prob_file' in locals():
@@ -49,4 +67,4 @@ def solve(solver='LKH', problem=None, **params):
     if 'tour_file' in locals():
         os.remove(tour_file.name)
 
-    return solution.tours
+    return routes
