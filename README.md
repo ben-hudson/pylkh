@@ -15,7 +15,7 @@ It extends the format [to support VRPs](https://github.com/ben-hudson/pylkh/blob
 
 Using PyLKH you can solve problems represented as Python objects or files.
 
-> CAUTION: distances are represented by integer values in the TSPLIB format. This can produce unexpected behaviour for some problems, like those with all nodes within the unit square. You can scale all coordinates by a large number to avoid this.
+> __CAUTION:__ distances are represented by integer values in the TSPLIB format. This can produce unexpected behaviour for some problems, like those with all nodes within the unit square. You can use the `EXACT_2D` distance to avoid rounding issues.
 
 ## Install
 ```
@@ -33,7 +33,7 @@ problem = lkh.LKHProblem.parse(problem_str)
 solver_path = '../LKH-3.0.6/LKH'
 lkh.solve(solver_path, problem=problem, max_trials=10000, runs=10)
 ```
-Output (note that values correspond to nodes, *not* node indicies):
+Output (values correspond to nodes, which are 1-indexed, _not_ node indicies, which are 0-indexed):
 ```
 [[27, 8, 14, 18, 20, 32, 22],
  [25, 28],
@@ -45,51 +45,76 @@ Output (note that values correspond to nodes, *not* node indicies):
 ## API
 ### ```lkh.solve(solver='LKH', problem=None, problem_file=None, **kwargs)```
 
-Solve a problem.
+Solve a problem instance.
 
 #### Parameters
-**solver** (optional): Path to LKH-3 executable. Defaults to `LKH`.
+* __solver__ (optional): Path to LKH-3 executable. Defaults to `LKH`.
 
-**problem** (optional): Problem object. [LKHProblem](https://github.com/ben-hudson/pylkh/blob/master/lkh/problems.py#L28) is preferred but [tsplib95.models.StandardProblem](https://tsplib95.readthedocs.io/en/stable/pages/modules.html#tsplib95.models.StandardProblem) also works. `problem` or `problem_file` is required.
+* __problem__ (optional): Problem object. [LKHProblem](https://github.com/ben-hudson/pylkh/blob/master/lkh/problems.py#L28) is preferred but [tsplib95.models.StandardProblem](https://tsplib95.readthedocs.io/en/stable/pages/modules.html#tsplib95.models.StandardProblem) also works. `problem` or `problem_file` is required.
 
-**problem_file** (optional): Path to TSPLIB-formatted problem. `problem` or `problem_file` is required.
+* __problem_file__ (optional): Path to TSPLIB-formatted problem. `problem` or `problem_file` is required.
 
-**kwargs** (optional): Any LKH-3 parameter described [here](https://github.com/ben-hudson/pylkh/blob/master/docs/lkh.pdf) (pg. 5-7) or [here](https://github.com/ben-hudson/pylkh/blob/master/docs/lkh-3.pdf) (pg. 6-8). Lowercase works. For example: `runs=10`.
+* __kwargs__ (optional): Any LKH-3 parameter described [here](https://github.com/ben-hudson/pylkh/blob/master/docs/lkh.pdf) (pg. 5-7) or [here](https://github.com/ben-hudson/pylkh/blob/master/docs/lkh-3.pdf) (pg. 6-8). Lowercase works. For example: `runs=10`.
 
 #### Returns
-**routes** (list): List of lists of nodes.
+__routes__: List of lists of nodes (nodes, *not* node indicies).
 
-### ```class lkh.LKHProblem```
+### _class_ ```lkh.LKHProblem```
 
-Problem supporting fields described [here](https://github.com/ben-hudson/pylkh/blob/master/docs/lkh-3.pdf) (pg. 4-6). Inherits from [tsplib95.models.StandardProblem](https://tsplib95.readthedocs.io/en/stable/pages/modules.html#tsplib95.models.StandardProblem).
+A problem that can be solved by LKH-3. Fields are (partially) described [here](https://github.com/ben-hudson/pylkh/blob/master/docs/lkh-3.pdf) (pg. 4-6). Inherits from [tsplib95.models.StandardProblem](https://tsplib95.readthedocs.io/en/stable/pages/modules.html#tsplib95.models.StandardProblem).
 
 The available specification fields are:
-* `NAME`
-* `TYPE`
-* `COMMENT`
-* `DIMENSION`
 * `CAPACITY`
-* `EDGE_WEIGHT_TYPE`
-* `EDGE_WEIGHT_FORMAT`
-* `EDGE_DATA_FORMAT`
-* `NODE_COORD_TYPE`
+* `COMMENT`
+* `DEMAND_DIMENSION`
+* `DIMENSION`
 * `DISPLAY_DATA_TYPE`
-* `SALESMEN`
-* `VEHICLES`
 * `DISTANCE`
+* `EDGE_DATA_FORMAT`
+* `EDGE_WEIGHT_FORMAT`
+* `EDGE_WEIGHT_TYPE`
+* `NAME`
+* `NODE_COORD_TYPE`
 * `RISK_THRESHOLD`
+* `SALESMEN`
 * `SCALE`
+* `SERVICE_TIME`
+* `TYPE`
+* `VEHICLES`
 
 The available data fields are:
-* `NODE_COORD_SECTION`
-* `DEPOT_SECTION`
-* `DEMAND_SECTION`
-* `EDGE_DATA_SECTION`
-* `FIXED_EDGES_SECTION`
-* `DISPLAY_DATA_SECTION`
-* `TOUR_SECTION`
-* `EDGE_WEIGHT_SECTION`
 * `BACKHAUL_SECTION`
+* `CTSP_SET_SECTION`
+* `DEMAND_SECTION`
+* `DEPOT_SECTION`
+* `DISPLAY_DATA_SECTION`
+* `DRAFT_LIMIT_SECTION`
+* `EDGE_DATA_SECTION`
+* `EDGE_WEIGHT_SECTION`
+* `FIXED_EDGES_SECTION`
+* `NODE_COORD_SECTION`
 * `PICKUP_AND_DELIVERY_SECTION`
+* `REQUIRED_NODES_SECTION`
 * `SERVICE_TIME_SECTION`
 * `TIME_WINDOW_SECTION`
+
+
+You probably want to initialize a problem instance using one of the following class methods:
+
+ #### _classmethod_ ```load(filepath, **options)```
+
+ Load a problem instance from a text file.
+
+ Inherited from [tsplib95.problems.Problem.load](https://tsplib95.readthedocs.io/en/stable/pages/modules.html#tsplib95.models.Problem.load).
+
+ #### _classmethod_ ```parse(text, **options)```
+
+ Parse text into a problem instance.
+
+ Inherited from [tsplib95.problems.Problem.parse](https://tsplib95.readthedocs.io/en/stable/pages/modules.html#tsplib95.models.Problem.parse).
+
+  #### _classmethod_ ```read(fp, **options)```
+
+ Read a problem instance from a file-like object.
+
+ Inherited from [tsplib95.problems.Problem.read](https://tsplib95.readthedocs.io/en/stable/pages/modules.html#tsplib95.models.Problem.read).
