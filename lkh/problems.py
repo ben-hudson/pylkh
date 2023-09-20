@@ -1,17 +1,13 @@
+import math
 import tsplib95 as tsplib
 
 from tsplib95 import transformers, distances
 
-
-def exact(start, end, scale=1000):
-    start_scaled = [e * scale for e in start]
-    end_scaled = [e * scale for e in end]
-    return distances.euclidean(start_scaled, end_scaled)
-
-
 distances.TYPES.update({
-    'EXACT_2D': exact,
-    'EXACT_3D': exact
+    'EXACT_2D': math.dist,
+    'EXACT_3D': math.dist,
+    'FLOOR_2D': distances.euclidean,
+    'FLOOR_3D': distances.euclidean,
 })
 
 
@@ -43,17 +39,17 @@ class LKHProblem(tsplib.models.StandardProblem):
     risk_threshold = tsplib.fields.IntegerField('RISK_THRESHOLD')
     salesmen = tsplib.fields.IntegerField('SALESMEN')
     scale = tsplib.fields.IntegerField('SCALE')
-    service_time = tsplib.fields.NumberField('SERVICE_TIME')
+    service_time = tsplib.fields.IntegerField('SERVICE_TIME')
     vehicles = tsplib.fields.IntegerField('VEHICLES')
 
     # extra data fields
-    backhaul = NodeListField('BACKHAUL_SECTION')
-    ctsp_set = CTSPSetField('CTSP_SET_SECTION')
-    draft_limit = tsplib.fields.DemandsField('DRAFT_LIMIT_SECTION') # draft limit has same unit as demand
-    pickup_and_delivery = tsplib.fields.MatrixField('PICKUP_AND_DELIVERY_SECTION')
-    required_nodes = NodeListField('REQUIRED_NODES_SECTION')
-    service_time = tsplib.fields.MatrixField('SERVICE_TIME_SECTION')
-    time_window = tsplib.fields.MatrixField('TIME_WINDOW_SECTION')
+    backhaul_section = NodeListField('BACKHAUL_SECTION')
+    ctsp_set_section = CTSPSetField('CTSP_SET_SECTION')
+    draft_limit_section = tsplib.fields.DemandsField('DRAFT_LIMIT_SECTION') # draft limit has same unit as demand
+    pickup_and_delivery_section = tsplib.fields.MatrixField('PICKUP_AND_DELIVERY_SECTION')
+    required_nodes_section = NodeListField('REQUIRED_NODES_SECTION')
+    service_time_section = tsplib.fields.MatrixField('SERVICE_TIME_SECTION')
+    time_window_section = tsplib.fields.MatrixField('TIME_WINDOW_SECTION')
 
     depots = NodeListField('DEPOT_SECTION')  # fix for https://github.com/rhgrant10/tsplib95/pull/16
 
