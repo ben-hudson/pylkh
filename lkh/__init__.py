@@ -6,6 +6,7 @@ import warnings
 
 from .problems import LKHProblem
 
+
 class NoToursException(Exception):
     pass
 

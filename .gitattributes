@@ -1,1 +1,1 @@
-instances/*.tgz filter=lfs diff=lfs merge=lfs -text
+tests/test_instances/*.tgz filter=lfs diff=lfs merge=lfs -text

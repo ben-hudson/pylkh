@@ -3,6 +3,7 @@ import tsplib95 as tsplib
 
 from tsplib95 import transformers, distances
 
+
 distances.TYPES.update({
     'EXACT_2D': math.dist,
     'EXACT_3D': math.dist,

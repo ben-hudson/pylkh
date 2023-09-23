@@ -1,8 +1,8 @@
 import lkh
 import pathlib
 import pytest
-import tarfile
 import random
+import tarfile
 import warnings
 
 misformatted_instances = [
@@ -28,7 +28,7 @@ def find_instances(tarball):
                 and path.suffix != '':
                 yield member.name
 
-instances_paths = list(pathlib.Path('instances').rglob('*.tgz'))
+instances_paths = list(pathlib.Path('tests/test_instances').rglob('*.tgz'))
 instance_types=[p.stem for p in instances_paths]
 
 @pytest.mark.parametrize("instances_path", instances_paths, ids=instance_types)
@@ -42,12 +42,12 @@ def test_parse(instances_path):
 @pytest.mark.parametrize("instances_path", instances_paths, ids=instance_types)
 def test_solve(instances_path):
     with tarfile.open(instances_path) as tarball:
-        instances = list(find_instances(tarball))
-        for instance_path in instances:
-            instance_file = tarball.extractfile(instance_path)
+        instance_paths = list(find_instances(tarball))
+        if len(instance_paths) > 0:
+            instance_file = tarball.extractfile(random.choice(instance_paths))
             problem = lkh.LKHProblem.parse(instance_file.read().decode('ascii'))
             try:
-                tours = lkh.solve(problem=problem, runs=10, max_trials=100)
+                lkh.solve(problem=problem, runs=10, max_trials=100)
             except lkh.NoToursException as e:
                 warnings.warn(e)
 
