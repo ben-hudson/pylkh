@@ -19,6 +19,6 @@ setup(name='lkh',
     keywords=['TSP', 'CVRP', 'VRP', 'LKH', 'LKH-3'],
     python_requires='>=3.3',
     install_requires=[
-        'tsplib95'
+        'tsplib95 @ git+https://github.com/ben-hudson/tsplib95@master'
     ],
 )

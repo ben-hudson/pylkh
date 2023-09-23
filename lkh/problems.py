@@ -11,27 +11,45 @@ distances.TYPES.update({
 })
 
 
-# nodes separated by \n and terminated with -1
 class NodeListField(tsplib.fields.TransformerField):
     default = list
 
     @classmethod
     def build_transformer(cls):
         node = transformers.FuncT(func=int)
-        return transformers.ListT(value=node, sep='\n', terminal='-1')
+        return transformers.ListT(value=node, terminal='-1')
 
-# salesman followed by a list of nodes separated by -1\n and terminated with nothing
+
 class CTSPSetField(tsplib.fields.TransformerField):
     default = dict
 
     @classmethod
     def build_transformer(cls):
-        key = transformers.FuncT(func=int)
-        value = transformers.ListT(value=transformers.FuncT(func=int), terminal='-1')
-        return transformers.MapT(key=key, value=value, sep='\n')
+        salesman = transformers.FuncT(func=int)
+        nodes = transformers.ListT(value=transformers.FuncT(func=int), terminal='-1')
+        return transformers.MapT(key=salesman, value=nodes, sep='\n')
 
 
-# format according to http://webhotel4.ruc.dk/~keld/research/LKH-3/LKH-3_REPORT.pdf
+# demand can be multi-dimensional, for example in mPDTSP
+class DemandsField(tsplib.fields.TransformerField):
+    default = dict
+
+    @classmethod
+    def build_transformer(cls):
+        node = transformers.FuncT(func=int)
+        demand = transformers.ListT(value=transformers.FuncT(func=int))
+        return transformers.MapT(key=node, value=demand, sep='\n')
+
+    # we can only validate that the demands have the same dimensionality, not that it matches DEMAND_DIMENSION
+    def validate(self, value):
+        super().validate(value)
+        dimensions = set(len(demand) for demand in value.values())
+        if len(dimensions) > 1:
+            error = ('all demands must have the same dimensionality '
+                     f'but got multiple dimensions {dimensions}')
+            raise tsplib.exceptions.ValidationError(error)
+
+
 class LKHProblem(tsplib.models.StandardProblem):
     # extra spec fields
     demand_dimension = tsplib.fields.IntegerField('DEMAND_DIMENSION')
@@ -39,19 +57,18 @@ class LKHProblem(tsplib.models.StandardProblem):
     risk_threshold = tsplib.fields.IntegerField('RISK_THRESHOLD')
     salesmen = tsplib.fields.IntegerField('SALESMEN')
     scale = tsplib.fields.IntegerField('SCALE')
-    service_time = tsplib.fields.IntegerField('SERVICE_TIME')
+    service_time = tsplib.fields.NumberField('SERVICE_TIME')
     vehicles = tsplib.fields.IntegerField('VEHICLES')
 
     # extra data fields
     backhaul_section = NodeListField('BACKHAUL_SECTION')
     ctsp_set_section = CTSPSetField('CTSP_SET_SECTION')
-    draft_limit_section = tsplib.fields.DemandsField('DRAFT_LIMIT_SECTION') # draft limit has same unit as demand
+    demand_section = DemandsField('DEMAND_SECTION') # draft limit has same unit as demand
+    draft_limit_section = DemandsField('DRAFT_LIMIT_SECTION') # draft limit has same unit as demand
     pickup_and_delivery_section = tsplib.fields.MatrixField('PICKUP_AND_DELIVERY_SECTION')
     required_nodes_section = NodeListField('REQUIRED_NODES_SECTION')
     service_time_section = tsplib.fields.MatrixField('SERVICE_TIME_SECTION')
     time_window_section = tsplib.fields.MatrixField('TIME_WINDOW_SECTION')
-
-    depots = NodeListField('DEPOT_SECTION')  # fix for https://github.com/rhgrant10/tsplib95/pull/16
 
     # need to override `render` because spec fields must precede data fields according to TSPLIB format
     # we assume that data fields end with _SECTION, and we sort those to the end of the field list

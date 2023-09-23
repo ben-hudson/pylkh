@@ -6,6 +6,9 @@ import warnings
 
 from .problems import LKHProblem
 
+class NoToursException(Exception):
+    pass
+
 
 def solve(solver='LKH', problem=None, **params):
     assert shutil.which(solver) is not None, f'{solver} not found.'
@@ -45,7 +48,7 @@ def solve(solver='LKH', problem=None, **params):
         raise Exception(e.output.decode())
 
     if not os.path.isfile(params['tour_file']) or os.stat(params['tour_file']).st_size == 0:
-        raise Exception(f"{params['tour_file']} does not appear to contain any tours. LKH probably did not find solution.")
+        raise NoToursException(f"{params['tour_file']} does not appear to contain any tours. LKH probably did not find solution.")
 
     # the tour file produced by LKH-3 includes dummy nodes to indicate depots
     # for example, if a problem has DIMENSION=32 (1 depot node + 31 task nodes),
