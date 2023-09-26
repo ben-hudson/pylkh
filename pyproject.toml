@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "lkh"
-version = "2.0.0-rc2"
+version = "2.0.0"
 description = "Super simple Python wrapper for LKH-3"
 authors = ["Ben Hudson <benhudson@fastmail.com>"]
 license = "DBAD"
