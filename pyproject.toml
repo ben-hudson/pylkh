@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "lkh"
-version = "2.0.0"
+version = "2.0.0-rc2"
 description = "Super simple Python wrapper for LKH-3"
 authors = ["Ben Hudson <benhudson@fastmail.com>"]
 license = "DBAD"
@@ -12,6 +12,10 @@ packages = [
 
 [tool.poetry.dependencies]
 python = "^3.3"
+Click = "^6.0"
+Deprecated = "~1.2.9"
+networkx = "^2.1"
+tabulate = "~0.8.7"
 
 [tool.poetry.group.dev.dependencies]
 pytest = "^7.4.2"

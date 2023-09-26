@@ -1,3 +1,4 @@
 [submodule "tsplib95"]
-	path = tsplib95
-	url = git@github.com:ben-hudson/tsplib95.git
+    path = tsplib95
+    url = git@github.com:ben-hudson/tsplib95.git
+    branch = master
