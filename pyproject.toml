@@ -1,0 +1,23 @@
+[tool.poetry]
+name = "lkh"
+version = "2.0.0"
+description = "Super simple Python wrapper for LKH-3"
+authors = ["Ben Hudson <benhudson@fastmail.com>"]
+license = "DBAD"
+readme = "README.md"
+packages = [
+    { include = "lkh" },
+    { include = "tsplib95", from="tsplib95"},
+]
+
+[tool.poetry.dependencies]
+python = "^3.3"
+
+[tool.poetry.group.dev.dependencies]
+pytest = "^7.4.2"
+pytest-xdist = "^3.3.1"
+twine = "^4.0.2"
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"
