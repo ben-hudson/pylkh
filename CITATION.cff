@@ -1,0 +1,24 @@
+# This CITATION.cff file was generated with cffinit.
+# Visit https://bit.ly/cffinit to generate yours today!
+
+cff-version: 1.2.0
+title: PyLKH
+message: >-
+  If you use this software, please cite it using the
+  metadata from this file.
+type: software
+authors:
+  - given-names: Benjamin
+    family-names: Hudson
+repository-code: 'https://github.com/ben-hudson/pylkh'
+url: 'https://pypi.org/project/lkh'
+abstract: >-
+  A super simple Python wrapper for the constrained
+  traveling salesman and vehicle routing problem solver
+  LKH-3.
+keywords:
+  - python
+  - vrp
+  - tsp
+  - tsp-solver
+  - vrp-solver
