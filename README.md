@@ -118,3 +118,6 @@ You probably want to initialize a problem instance using one of the following cl
  Read a problem instance from a file-like object.
 
  Inherited from [tsplib95.problems.Problem.read](https://tsplib95.readthedocs.io/en/stable/pages/modules.html#tsplib95.models.Problem.read).
+
+ ## Citation
+ If you use PyLKH in your research, please cite it. You can generate an APA or BibTeX citation by clicking "Cite this repository" in the About section. Read more about citation files on GitHub [here](https://docs.github.com/en/repositories/managing-your-repositorys-settings-and-features/customizing-your-repository/about-citation-files).
