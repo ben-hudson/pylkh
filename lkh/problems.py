@@ -70,6 +70,10 @@ class LKHProblem(tsplib.models.StandardProblem):
     required_nodes_section = NodeListField('REQUIRED_NODES_SECTION')
     service_time_section = tsplib.fields.MatrixField('SERVICE_TIME_SECTION')
     time_window_section = tsplib.fields.MatrixField('TIME_WINDOW_SECTION')
+    depot = tsplib.fields.DepotsField('DEPOT')
+    mtsp_objective = tsplib.fields.StringField('MTSP_OBJECTIVE')
+    mtsp_min_size = tsplib.fields.IntegerField('MTSP_MIN_SIZE')
+    mtsp_max_size = tsplib.fields.IntegerField('MTSP_MAX_SIZE')
 
     # need to override `render` because spec fields must precede data fields according to TSPLIB format
     # we assume that data fields end with _SECTION, and we sort those to the end of the field list
